@@ -118,5 +118,5 @@ python3 harness.py --input_csv test.csv --output_csv results_/output_csv
 Where you can replace test.csv with your test dataset and results_/output_csv with your preferred destination path.
 
 
-###Verification:
+### Verification:
 `test.py` checks if a record receives the same P.D if it's scored alone or with a group of data. It prints out the PDs and the absolute difference between both. If abs = 0, the model is invariant to new data.
