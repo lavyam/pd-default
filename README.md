@@ -118,27 +118,5 @@ python3 harness.py --input_csv test.csv --output_csv results_/output_csv
 Where you can replace test.csv with your test dataset and results_/output_csv with your preferred destination path.
 
 
-### Data Leakage:
-
-The project contained 2 sources of data leakage. Which caused the model to use data from future instead of the info available at the scoring time.
-
-1. Leakage in Fallback Imputation (Latent Factors)
-    Description: The fallback imputation computed means, standard deviations, and factor loadings using all available data, including new data (test). This allowed the imputer to "peek" into the future.
-    Fix:
-    1. Fit the imputer only on the training data.
-    2. Store all params such as means, stds, factor loadings inside `artifacts.factor_imputer` 
-    3. During inference, use frozen imputer that doesn't recompute anything
-
-2. Leakage in Growth Ratios Calculation
-    Description: Growth ratios were calculated by `pct_change`. This means the growth values depended on other rows inside the same scoring file, which is invalid.
-    Example: In the test data, if there is only 1 record of firm => growth = NaN, but if there are multiple records => growth != NaN
-    This shouldn't be the case, as growth should be calculated based on historically available data instead of current data/peeking into future
-
-    Fix:
-    1. Precompute historical values i.e. last known financial statement per borrower, on training data only
-    2. Store them in:
-      `artifacts.history_table`
-    3. During inference, compute growth as the difference between the current value and the last known "historic value"
-
-Verification:
+###Verification:
 `test.py` checks if a record receives the same P.D if it's scored alone or with a group of data. It prints out the PDs and the absolute difference between both. If abs = 0, the model is invariant to new data.
