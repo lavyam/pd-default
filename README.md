@@ -1,6 +1,6 @@
 # PD Model – Script Overview
 
-This repository contains the code for training and running the Banca Massiccia Probability of Default (PD) model.  
+This repository contains the code for training and running a Probability of Default (PD) model.  
 Below is a short description of each script file.
 
 ---
